@@ -1,0 +1,61 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+model User{
+	id				Int		@id @default(autoincrement())
+	email			String		@unique
+	firstname		String
+	middlename		String?
+	lastname		String
+	password		String
+	emailVerified	Boolean @default(false)
+	accountTypeCode	Int
+	accountType	AccountType @relation(fields: [accountTypeCode], references: [id])
+	products	Product[]
+	comments	Comment[]
+	ratings		Rating[]
+}
+
+model AccountType{
+	id	Int	@id
+	accountTypeName	String	@unique
+	users	User[]
+}
+
+model Product{
+	id Int @id @default(autoincrement())
+	name	String
+	userId	Int
+	user	User @relation(fields: [userId], references: [id])
+	price	Int
+	brand	String?
+	details	String
+	image	String
+	comments Comment[]
+	ratings	 Rating[]
+}
+
+model Comment{
+	id Int	@id	@default(autoincrement())
+	authorId	Int
+	user	User @relation(fields:[authorId], references: [id])
+	productId	Int
+	product	Product @relation(fields:[productId], references: [id])
+	text	String
+}
+
+model Rating{
+	id Int	@id	@default(autoincrement())
+	authorId	Int
+	user	User @relation(fields:[authorId], references: [id])
+	productId	Int
+	product	Product @relation(fields:[productId], references: [id])
+	score	Int
+}
