@@ -44,6 +44,4 @@ app.get("/product_search", product_search);
 app.get("/product_detail/:id", product_detail);
 app.get("/product_list", product_list);
 
-app.listen(3000, () => {
-  console.log("[NOTE] Server Started At localhost:3000");
-});
+module.exports = app;
